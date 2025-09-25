@@ -6,6 +6,8 @@ const connectDB = require('./config/db');
 const authRoutes = require('../server/routes/authRoutes') 
 const ideaRoutes = require('../server/routes/ideaRoutes')
 const path = require('path')
+const http = require('http')
+const {initSocket} = require('./utils/socket')
 
 dotenv.config()
 const app = express();
@@ -34,7 +36,13 @@ connectDB()
 app.use('/api/auth',authRoutes)
 app.use('/api/ideas',ideaRoutes)
 
+const server = http.createServer(app);
+
+initSocket(server);
+
 const PORT = process.env.PORT || 3000
 
 // server listen
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
